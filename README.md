@@ -106,7 +106,7 @@ export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7,8
 data_bin_dir=directory_of_data_bin
 model_dir=./ckpt
 python train.py $data_bin_dir \
-	--arch oracle_transformer_vaswani_wmt_en_de_big --share-all-embeddings \
+    --arch oracle_transformer_vaswani_wmt_en_de_big --share-all-embeddings \
     --optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 --lr-scheduler inverse_sqrt \
     --warmup-init-lr 1e-07 --warmup-updates 4000 --lr 0.0007 --min-lr 1e-09 \
     --weight-decay 0.0 --criterion oracle_label_smoothed_cross_entropy --label-smoothing 0.1 \
@@ -143,7 +143,7 @@ export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7,8
 data_bin_dir=directory_of_data_bin
 model_dir=./ckpt
 python train.py $data_bin_dir \
-	--arch oracle_transformer_wmt_en_de --share-all-embeddings \
+    --arch oracle_transformer_wmt_en_de --share-all-embeddings \
     --optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 --lr-scheduler inverse_sqrt \
     --warmup-init-lr 1e-07 --warmup-updates 4000 --lr 0.0007 --min-lr 1e-09 \
     --weight-decay 0.0 --criterion oracle_label_smoothed_cross_entropy --label-smoothing 0.1 \
@@ -162,7 +162,7 @@ export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7,8
 data_bin_dir=directory_of_data_bin
 model_dir=./ckpt
 python train.py $data_bin_dir \
-	--arch oracle_transformer_wmt_en_de --share-all-embeddings \
+    --arch oracle_transformer_wmt_en_de --share-all-embeddings \
     --optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 --lr-scheduler inverse_sqrt \                                                                                                                
     --warmup-init-lr 1e-07 --warmup-updates 4000 --lr 0.0007 --min-lr 1e-09 \
     --weight-decay 0.0 --criterion oracle_label_smoothed_cross_entropy --label-smoothing 0.1 \
