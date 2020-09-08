@@ -57,6 +57,110 @@ python train.py $data_dir \
 	--use-word-level-oracles --use-epoch-numbers-decay --decay-k 10 --use-greed-gumbel-noise --gumbel-noise 0.5 | tee -a $model_dir/training.log
 ```
 
+
+Model settings on different translation tasks.
+**\#Toks.** means batchsize on single GPU.
+**\#Freq.** means the times of gradient accumulation.
+**Max** represents the maximum number of training epochs (30) or updates (80k).
+
+| Models | Task | \#GPUs | \#Toks. | \#Freq. | Learning Rate |  Max
+| ----- | ----- | -----
+| Transformer-big | NIST Zh$\Rightarrow$En | 8 | 4096 | 3 | 0.0005 | 30 epochs
+| Transformer-big (word oracle) | NIST Zh$\Rightarrow$En | 8 | 4096 | 3 | 0.0005 | 30 epochs
+| Transformer-base | WMT'14 En$\Rightarrow$De | 8 | 6144 | 2 | 0.0007 | 80k updates
+| Transformer-base (word oracle) | WMT'14 En$\Rightarrow$De | 8 | 12288 | 1 | 0.0007 | 80k updates
+| Transformer-base (sentence oracle) | WMT'14 En$\Rightarrow$De | 8 | 12288 | 1 | 0.0007 | 40k updates
+
+### Results and Settings on NIST CHinese$\Rightarrow$English translation task
+We calculate the case-insensitive 4-gram tokenized BLEU by script [*multibleu.perl*](https://github.com/moses-smt/mosesdecoder/blob/RELEASE-4.0/scripts/generic/multi-bleu.perl)
+| Models | dev. (MT02) | MT03 | MT04 | MT05 | MT06 | MT08 | Average
+| ----- | ----- | -----
+| Transformer-big | 48.50 |	47.29 | 47.79 | 48.28 | 47.50 | 38.50 | 45.87 |	30
+| Word-level Oracle (k==10) | 49.18 | 48.70 | 48.67 | 48.69 | 48.49 | 39.58 | 46.83 | 30
+| Word-level Oracle (**k==15**) | **49.05** | **48.57** | **48.73** | **48.68** | **48.59** | **39.68** | **46.85** | 30
+| Word-level Oracle (k==20) | 49.30 | 48.46 | 48.57 | 48.87 | 48.57 | 39.46 | 46.79 | 30
+| Word-level Oracle (k==25) | 48.88 | 48.32 | 48.66 | 48.74 | 48.32 | 39.38 | 46.68 | 30
+| Word-level Oracle (k==30) | 48.47 | 48.37 | 48.50 | 48.63 | 48.07 | 39.54 | 46.62 | 46.74 | 30
+
+
+We evaluate by the case-insensitive 4-gram detokenized BLEU with SacreBLEU, which is calculated the script [score.py](https://github.com/pytorch/fairseq/blob/master/fairseq_cli/score.py) provided by fairseq:
+BLEU+case.mixed+lang.en-\{de,fr\}+numrefs.4+smooth.exp+tok.13a+version.1.4.4
+| Models | dev. (MT02) | MT03 | MT04 | MT05 | MT06 | MT08 | Average
+| ----- | ----- | -----
+| Transformer-big | 48.46 | 47.41 | 47.88 | 48.25 | 47.52 | 38.60 | 45.93 |	30
+| Word-level Oracle (k==10) | 49.20	| 48.80	| 48.77	| 48.64	| 48.49	| 39.79	| 46.90 | 30
+| Word-level Oracle (**k==15**) | **49.07**	| **48.64**	| **48.81**	| **48.63**	| **48.65**	| **39.88**	| **46.92** | 30
+| Word-level Oracle (k==20) | 49.32	| 48.54	| 48.73	| 48.82	| 48.51	| 39.50	| 46.82 | 30
+| Word-level Oracle (k==25) | 48.90	| 48.18	| 48.70	| 48.59	| 47.73	| 39.14	| 46.47 | 30
+| Word-level Oracle (k==30) | 48.53	| 48.59	| 48.74	| 48.58	| 48.07	| 39.71	| 46.74 | 30
+
+The setting of the NIST CHinese$\Rightarrow$English:
+```shell
+    python train.py $data_bin_dir \
+        --arch oracle_transformer_vaswani_wmt_en_de_big --share-all-embeddings \
+        --optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 --lr-scheduler inverse_sqrt \
+        --warmup-init-lr 1e-07 --warmup-updates 4000 --lr 0.0007 --min-lr 1e-09 \
+        --weight-decay 0.0 --criterion oracle_label_smoothed_cross_entropy --label-smoothing 0.1 \
+        --max-tokens 4096 --update-freq 3 --no-progress-bar --log-format json --max-epoch 30 \
+        --log-interval 10 --save-interval 2 --keep-last-epochs 10 \
+        --seed 1111 --use-epoch-numbers-decay \
+        --use-word-level-oracles --decay-k 15 --use-greed-gumbel-noise --gumbel-noise 0.5 \
+        --distributed-port 32222 --distributed-world-size 8 --ddp-backend=no_c10d \
+        --source-lang zh --target-lang en --save-dir $model_dir | tee -a $model_dir/training.log
+```
+
+### Results and Settings on WMT'14 English$\Rightarrow$German translation task
+We calculate the case-sensitive 4-gram tokenized BLEU by script [*multibleu.perl*](https://github.com/moses-smt/mosesdecoder/blob/RELEASE-4.0/scripts/generic/multi-bleu.perl)
+| Models | newstest2014 | \#update
+| ----- | ----- | -----
+| Transformer-base | 27.54 | 80000
+| Word-level Oracle (k==50, noise==0.8) | 28.01	| 80000
+| Sentence-level Oracle (k==5800, noise==0.5, beamsize==4) | 28.45	| 40000
+
+We evaluate by the case-sensitive 4-gram detokenized BLEU with SacreBLEU, which is calculated the script [score.py](https://github.com/pytorch/fairseq/blob/master/fairseq_cli/score.py) provided by fairseq:
+**BLEU+case.mixed+lang.en-\{de,fr\}+numrefs.1+smooth.exp+tok.13a+version.1.4.4**
+| Models | newstest2014 | \#update
+| ----- | ----- | -----
+| Transformer-base | 26.45 | 80000
+| Word-level Oracle (k==50, noise==0.8) | 26.86	| 80000
+| Sentence-level Oracle (k==5800, noise==0.5, beamsize==4) | 27.24 | 40000
+
+Setting of the word-level oracle for the WMT'14 English$\Rightarrow$German dataset:
+
+```shell
+    python train.py $data_dir \
+        --arch oracle_transformer_wmt_en_de --share-all-embeddings \
+        --optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 --lr-scheduler inverse_sqrt \
+        --warmup-init-lr 1e-07 --warmup-updates 4000 --lr 0.0007 --min-lr 1e-09 \
+        --weight-decay 0.0 --criterion oracle_label_smoothed_cross_entropy --label-smoothing 0.1 \
+        --max-tokens 12288 --update-freq 1 --no-progress-bar --log-format json --max-update 80000 \
+        --log-interval 10 --save-interval-updates 4000 --keep-interval-updates 10 --save-interval 10000 \
+        --seed 1111 --use-epoch-numbers-decay \
+        --use-word-level-oracles --decay-k 50 --use-greed-gumbel-noise --gumbel-noise 0.8 \
+        --distributed-port 31111 --distributed-world-size 8 --ddp-backend=no_c10d \
+        --source-lang en --target-lang de --save-dir $model_dir | tee -a $model_dir/training.log
+```
+
+Setting of the sentence-level oracle for the WMT'14 English$\Rightarrow$German dataset:
+
+```shell
+    python train.py $data_dir \
+        --arch oracle_transformer_wmt_en_de --share-all-embeddings \
+        --optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 --lr-scheduler inverse_sqrt \                                                                                                                
+        --warmup-init-lr 1e-07 --warmup-updates 4000 --lr 0.0007 --min-lr 1e-09 \
+        --weight-decay 0.0 --criterion oracle_label_smoothed_cross_entropy --label-smoothing 0.1 \
+        --max-tokens 12288 --update-freq 1 --no-progress-bar --log-format json --max-update 40000 \
+        --log-interval 10 --save-interval-updates 2000 --keep-interval-updates 10 --save-interval 10000 \
+        --seed 1111 --reset-optimizer --reset-meters \
+        --use-sentence-level-oracles --decay-k 5800 --use-bleu-gumbel-noise --gumbel-noise 0.5 --oracle-search-beam-size 4 \ 
+        --distributed-port 31111 --distributed-world-size 8 --ddp-backend=no_c10d \
+        --source-lang en --target-lang de --save-dir $model_dir | tee -a $model_dir/training.log
+```
+
+
+
+
+
 ## NOTE
 + The speed of word-level training is almost the same as original transformer.
 + Sentence-level training is slower than word-level training.
