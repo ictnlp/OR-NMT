@@ -121,7 +121,7 @@ python train.py $data_bin_dir \
 The probability of sampling golden word decays with the number of epochs as follows: 
 
 <divalign="center">
-![avatar](/Users/kevinwzhang/research/mt/function/decay_epoch_zhen.png)
+![avatar](./figs/decay_epoch_zhen.png)
 </div>
 
 
@@ -165,7 +165,7 @@ python train.py $data_bin_dir \
 The probability of sampling golden word decays with the number of epochs as follows: 
 
 <divalign="center">
-![avatar](/Users/kevinwzhang/research/mt/function/decay_epoch_ende.png)
+![avatar](./figs/decay_epoch_ende.png)
 </div>
 
 In order to save training time, we use the sentence-level oracle method to finetune the best base model.
@@ -192,8 +192,9 @@ python train.py $data_bin_dir \
 The probability of sampling golden word decays with the number of udpates as follows: 
 
 <divalign="center">
-![avatar](/Users/kevinwzhang/research/mt/function/decay_update.png)
+![avatar](./figs/decay_update_ende.png)
 </div>
+
 
 ## NOTE
 + The speed of word-level training is almost the same as original transformer.
