@@ -59,7 +59,7 @@ python train.py $data_dir \
 
 
 
-### Model settings on NIST Chinese=\>$English (Zh=\>En) and WMT'14 English=\>German (En=\>De).
+### Model settings on NIST Chinese=\>English (Zh=\>En) and WMT'14 English=\>German (En=\>De).
 
 | Models | Task | \#GPUs | \#Toks. | \#Freq. | Max
 | ----- | ----- | ----- | ----- | ----- | ----- 
@@ -75,7 +75,7 @@ python train.py $data_dir \
 > 
 > **Max** represents the maximum number of training epochs (30) or updates (80k).
 
-### Results and Settings on NIST CHinese=\>English translation task
+### Results and Settings on NIST Chinese=\>English translation task
 We calculate the case-insensitive 4-gram tokenized BLEU by script [*multibleu.perl*](https://github.com/moses-smt/mosesdecoder/blob/RELEASE-4.0/scripts/generic/multi-bleu.perl)
 
 | Models | dev. (MT02) | MT03 | MT04 | MT05 | MT06 | MT08 | Average
@@ -120,7 +120,7 @@ python train.py $data_bin_dir \
 
 The probability of sampling golden word decays with the number of epochs as follows: 
 
-<divalign="center">
+<divalign="center" width="50%" height="50%">
 ![avatar](./figs/decay_epoch_zhen.png)
 </div>
 
@@ -164,7 +164,7 @@ python train.py $data_bin_dir \
 
 The probability of sampling golden word decays with the number of epochs as follows: 
 
-<divalign="center">
+<divalign="center" width="50%" height="50%">
 ![avatar](./figs/decay_epoch_ende.png)
 </div>
 
@@ -191,7 +191,7 @@ python train.py $data_bin_dir \
 
 The probability of sampling golden word decays with the number of udpates as follows: 
 
-<divalign="center">
+<divalign="center" width="50%" height="50%">
 ![avatar](./figs/decay_update_ende.png)
 </div>
 
