@@ -58,15 +58,15 @@ python train.py $data_dir \
 ```
 
 
-Model settings on NIST Chinese$\Rightarrow$English and WMT'14 English$\Rightarrow$German.
+Model settings on NIST Chinese=\>$English (Zh=\>En) and WMT'14 English=\>German (En=\>De).
 
 | Models | Task | \#GPUs | \#Toks. | \#Freq. | Learning Rate |  Max
 | ----- | ----- | ----- | ----- | ----- | ----- | ----- 
-| Transformer-big | NIST Zh$\Rightarrow$En | 8 | 4096 | 3 | 0.0005 | 30 epochs
-| Transformer-big (word oracle) | NIST Zh$\Rightarrow$En | 8 | 4096 | 3 | 0.0007 | 30 epochs
-| Transformer-base | WMT'14 En$\Rightarrow$De | 8 | 6144 | 2 | 0.0007 | 80k updates
-| Transformer-base (word oracle) | WMT'14 En$\Rightarrow$De | 8 | 12288 | 1 | 0.0007 | 80k updates
-| Transformer-base (sentence oracle) | WMT'14 En$\Rightarrow$De | 8 | 12288 | 1 | 0.0007 | 40k updates
+| Transformer-big | NIST Zh=\>En | 8 | 4096 | 3 | 0.0005 | 30 epochs
+| + Word-level Oracle | NIST Zh=\>En | 8 | 4096 | 3 | 0.0007 | 30 epochs
+| Transformer-base | WMT'14 En=\>De | 8 | 6144 | 2 | 0.0007 | 80k updates
+| + Word-level Oracle | WMT'14 En=\>De | 8 | 12288 | 1 | 0.0007 | 80k updates
+| + Sentence-level Oracle | WMT'14 En=\>De | 8 | 12288 | 1 | 0.0007 | 40k updates
 
 > **\#Toks.** means batchsize on single GPU.
 > 
@@ -99,7 +99,7 @@ We also evaluate by the case-insensitive 4-gram detokenized BLEU with SacreBLEU,
 | Word-level Oracle (k==25) | 48.90	| 48.18 | 48.70 | 48.59 | 47.73 | 39.14 | 46.47 | 30
 | Word-level Oracle (k==30) | 48.53	| 48.59 | 48.74 | 48.58 | 48.07 | 39.71 | 46.74 | 30
 
-The setting of the NIST CHinese$\Rightarrow$English:
+The setting of the NIST Chinese=\>English:
 ```shell
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7,8
 data_bin_dir=directory_of_data_bin
@@ -135,7 +135,7 @@ We also evaluate by the case-sensitive 4-gram detokenized BLEU with SacreBLEU, w
 | Word-level Oracle (k==50, noise==0.8) | 26.86 | 80000
 | Sentence-level Oracle (k==5800, noise==0.5, beamsize==4) | 27.24 | 40000
 
-Setting of the word-level oracle for the WMT'14 English$\Rightarrow$German dataset:
+Setting of the word-level oracle for the WMT'14 English=\>German dataset:
 
 ```shell
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7,8
@@ -154,7 +154,7 @@ python train.py $data_bin_dir \
     --source-lang en --target-lang de --save-dir $model_dir | tee -a $model_dir/training.log
 ```
 
-Setting of the sentence-level oracle for the WMT'14 English$\Rightarrow$German dataset:
+Setting of the sentence-level oracle for the WMT'14 English=\>German dataset:
 
 ```shell
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7,8
