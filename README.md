@@ -98,8 +98,6 @@ The setting of the NIST CHinese$\Rightarrow$English:
 ```shell
 
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
-batch_size=4096
-accum=3
 data_bin_dir=directory_of_data_bin
 model_dir=./ckpt
 python train.py $data_bin_dir \
@@ -135,8 +133,6 @@ Setting of the word-level oracle for the WMT'14 English$\Rightarrow$German datas
 
 ```shell
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
-batch_size=4096
-accum=3
 data_bin_dir=directory_of_data_bin
 model_dir=./ckpt
 python train.py $data_dir \
@@ -155,21 +151,21 @@ python train.py $data_dir \
 Setting of the sentence-level oracle for the WMT'14 English$\Rightarrow$German dataset:
 
 ```shell
-    python train.py $data_dir \
-        --arch oracle_transformer_wmt_en_de --share-all-embeddings \
-        --optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 --lr-scheduler inverse_sqrt \                                                                                                                
-        --warmup-init-lr 1e-07 --warmup-updates 4000 --lr 0.0007 --min-lr 1e-09 \
-        --weight-decay 0.0 --criterion oracle_label_smoothed_cross_entropy --label-smoothing 0.1 \
-        --max-tokens 12288 --update-freq 1 --no-progress-bar --log-format json --max-update 40000 \
-        --log-interval 10 --save-interval-updates 2000 --keep-interval-updates 10 --save-interval 10000 \
-        --seed 1111 --reset-optimizer --reset-meters \
-        --use-sentence-level-oracles --decay-k 5800 --use-bleu-gumbel-noise --gumbel-noise 0.5 --oracle-search-beam-size 4 \ 
-        --distributed-port 31111 --distributed-world-size 8 --ddp-backend=no_c10d \
-        --source-lang en --target-lang de --save-dir $model_dir | tee -a $model_dir/training.log
+export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+data_bin_dir=directory_of_data_bin
+model_dir=./ckpt
+python train.py $data_dir \
+	--arch oracle_transformer_wmt_en_de --share-all-embeddings \
+    --optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 --lr-scheduler inverse_sqrt \                                                                                                                
+    --warmup-init-lr 1e-07 --warmup-updates 4000 --lr 0.0007 --min-lr 1e-09 \
+    --weight-decay 0.0 --criterion oracle_label_smoothed_cross_entropy --label-smoothing 0.1 \
+    --max-tokens 12288 --update-freq 1 --no-progress-bar --log-format json --max-update 40000 \
+    --log-interval 10 --save-interval-updates 2000 --keep-interval-updates 10 --save-interval 10000 \
+    --seed 1111 --reset-optimizer --reset-meters \
+    --use-sentence-level-oracles --decay-k 5800 --use-bleu-gumbel-noise --gumbel-noise 0.5 --oracle-search-beam-size 4 \ 
+    --distributed-port 31111 --distributed-world-size 8 --ddp-backend=no_c10d \
+    --source-lang en --target-lang de --save-dir $model_dir | tee -a $model_dir/training.log
 ```
-
-
-
 
 
 ## NOTE
