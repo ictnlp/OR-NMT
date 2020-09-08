@@ -66,7 +66,7 @@ Model settings on different translation tasks.
 | Models | Task | \#GPUs | \#Toks. | \#Freq. | Learning Rate |  Max
 | ----- | ----- | -----
 | Transformer-big | NIST Zh$\Rightarrow$En | 8 | 4096 | 3 | 0.0005 | 30 epochs
-| Transformer-big (word oracle) | NIST Zh$\Rightarrow$En | 8 | 4096 | 3 | 0.0005 | 30 epochs
+| Transformer-big (word oracle) | NIST Zh$\Rightarrow$En | 8 | 4096 | 3 | 0.0007 | 30 epochs
 | Transformer-base | WMT'14 En$\Rightarrow$De | 8 | 6144 | 2 | 0.0007 | 80k updates
 | Transformer-base (word oracle) | WMT'14 En$\Rightarrow$De | 8 | 12288 | 1 | 0.0007 | 80k updates
 | Transformer-base (sentence oracle) | WMT'14 En$\Rightarrow$De | 8 | 12288 | 1 | 0.0007 | 40k updates
@@ -96,17 +96,23 @@ BLEU+case.mixed+lang.en-\{de,fr\}+numrefs.4+smooth.exp+tok.13a+version.1.4.4
 
 The setting of the NIST CHinese$\Rightarrow$English:
 ```shell
-    python train.py $data_bin_dir \
-        --arch oracle_transformer_vaswani_wmt_en_de_big --share-all-embeddings \
-        --optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 --lr-scheduler inverse_sqrt \
-        --warmup-init-lr 1e-07 --warmup-updates 4000 --lr 0.0007 --min-lr 1e-09 \
-        --weight-decay 0.0 --criterion oracle_label_smoothed_cross_entropy --label-smoothing 0.1 \
-        --max-tokens 4096 --update-freq 3 --no-progress-bar --log-format json --max-epoch 30 \
-        --log-interval 10 --save-interval 2 --keep-last-epochs 10 \
-        --seed 1111 --use-epoch-numbers-decay \
-        --use-word-level-oracles --decay-k 15 --use-greed-gumbel-noise --gumbel-noise 0.5 \
-        --distributed-port 32222 --distributed-world-size 8 --ddp-backend=no_c10d \
-        --source-lang zh --target-lang en --save-dir $model_dir | tee -a $model_dir/training.log
+
+export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+batch_size=4096
+accum=3
+data_bin_dir=directory_of_data_bin
+model_dir=./ckpt
+python train.py $data_bin_dir \
+	--arch oracle_transformer_vaswani_wmt_en_de_big --share-all-embeddings \
+    --optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 --lr-scheduler inverse_sqrt \
+    --warmup-init-lr 1e-07 --warmup-updates 4000 --lr 0.0007 --min-lr 1e-09 \
+    --weight-decay 0.0 --criterion oracle_label_smoothed_cross_entropy --label-smoothing 0.1 \
+    --max-tokens 4096 --update-freq 3 --no-progress-bar --log-format json --max-epoch 30 \
+    --log-interval 10 --save-interval 2 --keep-last-epochs 10 \
+    --seed 1111 --use-epoch-numbers-decay \
+    --use-word-level-oracles --decay-k 15 --use-greed-gumbel-noise --gumbel-noise 0.5 \
+    --distributed-port 32222 --distributed-world-size 8 --ddp-backend=no_c10d \
+    --source-lang zh --target-lang en --save-dir $model_dir | tee -a $model_dir/training.log
 ```
 
 ### Results and Settings on WMT'14 English$\Rightarrow$German translation task
@@ -128,17 +134,22 @@ We evaluate by the case-sensitive 4-gram detokenized BLEU with SacreBLEU, which 
 Setting of the word-level oracle for the WMT'14 English$\Rightarrow$German dataset:
 
 ```shell
-    python train.py $data_dir \
-        --arch oracle_transformer_wmt_en_de --share-all-embeddings \
-        --optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 --lr-scheduler inverse_sqrt \
-        --warmup-init-lr 1e-07 --warmup-updates 4000 --lr 0.0007 --min-lr 1e-09 \
-        --weight-decay 0.0 --criterion oracle_label_smoothed_cross_entropy --label-smoothing 0.1 \
-        --max-tokens 12288 --update-freq 1 --no-progress-bar --log-format json --max-update 80000 \
-        --log-interval 10 --save-interval-updates 4000 --keep-interval-updates 10 --save-interval 10000 \
-        --seed 1111 --use-epoch-numbers-decay \
-        --use-word-level-oracles --decay-k 50 --use-greed-gumbel-noise --gumbel-noise 0.8 \
-        --distributed-port 31111 --distributed-world-size 8 --ddp-backend=no_c10d \
-        --source-lang en --target-lang de --save-dir $model_dir | tee -a $model_dir/training.log
+export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+batch_size=4096
+accum=3
+data_bin_dir=directory_of_data_bin
+model_dir=./ckpt
+python train.py $data_dir \
+	--arch oracle_transformer_wmt_en_de --share-all-embeddings \
+    --optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 --lr-scheduler inverse_sqrt \
+    --warmup-init-lr 1e-07 --warmup-updates 4000 --lr 0.0007 --min-lr 1e-09 \
+    --weight-decay 0.0 --criterion oracle_label_smoothed_cross_entropy --label-smoothing 0.1 \
+    --max-tokens 12288 --update-freq 1 --no-progress-bar --log-format json --max-update 80000 \
+    --log-interval 10 --save-interval-updates 4000 --keep-interval-updates 10 --save-interval 10000 \
+    --seed 1111 --use-epoch-numbers-decay \
+    --use-word-level-oracles --decay-k 50 --use-greed-gumbel-noise --gumbel-noise 0.8 \
+    --distributed-port 31111 --distributed-world-size 8 --ddp-backend=no_c10d \
+    --source-lang en --target-lang de --save-dir $model_dir | tee -a $model_dir/training.log
 ```
 
 Setting of the sentence-level oracle for the WMT'14 English$\Rightarrow$German dataset:
