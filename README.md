@@ -58,15 +58,16 @@ python train.py $data_dir \
 ```
 
 
-Model settings on NIST Chinese=\>$English (Zh=\>En) and WMT'14 English=\>German (En=\>De).
 
-| Models | Task | \#GPUs | \#Toks. | \#Freq. | Learning Rate |  Max
-| ----- | ----- | ----- | ----- | ----- | ----- | ----- 
-| Transformer-big | NIST Zh=\>En | 8 | 4096 | 3 | 0.0005 | 30 epochs
-| + Word-level Oracle | NIST Zh=\>En | 8 | 4096 | 3 | 0.0007 | 30 epochs
-| Transformer-base | WMT'14 En=\>De | 8 | 6144 | 2 | 0.0007 | 80k updates
-| + Word-level Oracle | WMT'14 En=\>De | 8 | 12288 | 1 | 0.0007 | 80k updates
-| + Sentence-level Oracle | WMT'14 En=\>De | 8 | 12288 | 1 | 0.0007 | 40k updates
+### Model settings on NIST Chinese=\>$English (Zh=\>En) and WMT'14 English=\>German (En=\>De).
+
+| Models | Task | \#GPUs | \#Toks. | \#Freq. | Max
+| ----- | ----- | ----- | ----- | ----- | ----- 
+| Transformer-big | NIST Zh=\>En | 8 | 4096 | 3 | 30 epochs
+| + Word-level Oracle | NIST Zh=\>En | 8 | 4096 | 3 | 30 epochs
+| Transformer-base | WMT'14 En=\>De | 8 | 6144 | 2 | 80k updates
+| + Word-level Oracle | WMT'14 En=\>De | 8 | 12288 | 1 | 80k updates
+| + Sentence-level Oracle | WMT'14 En=\>De | 8 | 12288 | 1 | 40k updates
 
 > **\#Toks.** means batchsize on single GPU.
 > 
@@ -74,7 +75,7 @@ Model settings on NIST Chinese=\>$English (Zh=\>En) and WMT'14 English=\>German 
 > 
 > **Max** represents the maximum number of training epochs (30) or updates (80k).
 
-### Results and Settings on NIST CHinese$\Rightarrow$English translation task
+### Results and Settings on NIST CHinese=\>English translation task
 We calculate the case-insensitive 4-gram tokenized BLEU by script [*multibleu.perl*](https://github.com/moses-smt/mosesdecoder/blob/RELEASE-4.0/scripts/generic/multi-bleu.perl)
 
 | Models | dev. (MT02) | MT03 | MT04 | MT05 | MT06 | MT08 | Average
@@ -117,7 +118,7 @@ python train.py $data_bin_dir \
     --source-lang zh --target-lang en --save-dir $model_dir | tee -a $model_dir/training.log
 ```
 
-### Results and Settings on WMT'14 English$\Rightarrow$German translation task
+### Results and Settings on WMT'14 English=\>German translation task
 We calculate the case-sensitive 4-gram tokenized BLEU by script [*multibleu.perl*](https://github.com/moses-smt/mosesdecoder/blob/RELEASE-4.0/scripts/generic/multi-bleu.perl)
 
 | Models | newstest2014 | \#update
