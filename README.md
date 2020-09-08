@@ -120,8 +120,8 @@ python train.py $data_bin_dir \
 
 The probability of sampling golden word decays with the number of epochs as follows: 
 
-<divalign="center" width="50%" height="50%">
-![avatar](./figs/decay_epoch_zhen.png)
+<div align="center">
+<img src="./figs/decay_epoch_zhen.png" width="60%" height="60%">
 </div>
 
 
@@ -164,9 +164,10 @@ python train.py $data_bin_dir \
 
 The probability of sampling golden word decays with the number of epochs as follows: 
 
-<divalign="center" width="50%" height="50%">
-![avatar](./figs/decay_epoch_ende.png)
+<div align="center">
+<img src="./figs/decay_epoch_ende.png" width="60%" height="60%">
 </div>
+
 
 In order to save training time, we use the sentence-level oracle method to finetune the best base model.
 
@@ -191,8 +192,8 @@ python train.py $data_bin_dir \
 
 The probability of sampling golden word decays with the number of udpates as follows: 
 
-<divalign="center" width="50%" height="50%">
-![avatar](./figs/decay_update_ende.png)
+<div align="center">
+<img src="./figs/decay_update_ende.png" width="60%" height="60%">
 </div>
 
 
