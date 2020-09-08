@@ -67,9 +67,9 @@ python train.py $data_dir \
 | ----- | ----- | ----- | ----- | ----- | ----- 
 | Transformer-big | NIST Zh=\>En | 8 | 4096 | 3 | 30 epochs
 | + Word-level Oracle | NIST Zh=\>En | 8 | 4096 | 3 | 30 epochs
-| Transformer-base | WMT'14 En=\>De | 8 | 6144 | 2 | 80k updates (62 epochs)
-| + Word-level Oracle | WMT'14 En=\>De | 8 | 12288 | 1 | 80k updates (62 epochs)
-| + Sentence-level Oracle | WMT'14 En=\>De | 8 | 12288 | 1 | 40k updates (62th epoch -> 93th epoch)
+| Transformer-base | WMT'14 En=\>De | 8 | 6144 | 2 | 80000 updates (62 epochs)
+| + Word-level Oracle | WMT'14 En=\>De | 8 | 12288 | 1 | 800000 updates (62 epochs)
+| + Sentence-level Oracle | WMT'14 En=\>De | 8 | 12288 | 1 | 400000 updates (62th epoch -> 93th epoch)
 
 > **\#Toks.** means batchsize on single GPU.
 > 
@@ -104,7 +104,7 @@ We also evaluate by the case-insensitive 4-gram detokenized BLEU with SacreBLEU,
 
 The setting of the NIST Chinese=\>English:
 ```shell
-export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7,8
+export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 data_bin_dir=directory_of_data_bin
 model_dir=./ckpt
 python train.py $data_bin_dir \
@@ -148,7 +148,7 @@ We also evaluate by the case-sensitive 4-gram detokenized BLEU with SacreBLEU, w
 Setting of the word-level oracle for the WMT'14 English=\>German dataset:
 
 ```shell
-export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7,8
+export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 data_bin_dir=directory_of_data_bin
 model_dir=./ckpt
 python train.py $data_bin_dir \
@@ -176,7 +176,7 @@ In order to save training time, we use the sentence-level oracle method to finet
 Setting of the sentence-level oracle for the WMT'14 English=\>German dataset:
 
 ```shell
-export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7,8
+export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 data_bin_dir=directory_of_data_bin
 model_dir=./ckpt
 python train.py $data_bin_dir \
