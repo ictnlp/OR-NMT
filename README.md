@@ -68,8 +68,8 @@ python train.py $data_dir \
 | Transformer-big | NIST Zh=\>En | 8 | 4096 | 3 | 30 epochs
 | + Word-level Oracle | NIST Zh=\>En | 8 | 4096 | 3 | 30 epochs
 | Transformer-base | WMT'14 En=\>De | 8 | 6144 | 2 | 80000 updates (62 epochs)
-| + Word-level Oracle | WMT'14 En=\>De | 8 | 12288 | 1 | 800000 updates (62 epochs)
-| + Sentence-level Oracle | WMT'14 En=\>De | 8 | 12288 | 1 | 400000 updates (62th epoch -> 93th epoch)
+| + Word-level Oracle | WMT'14 En=\>De | 8 | 12288 | 1 | 80000 updates (62 epochs)
+| + Sentence-level Oracle | WMT'14 En=\>De | 8 | 12288 | 1 | 40000 updates (62th epoch -> 93th epoch)
 
 > **\#Toks.** means batchsize on single GPU.
 > 
