@@ -65,9 +65,9 @@ python train.py $data_dir \
 | ----- | ----- | ----- | ----- | ----- | ----- 
 | Transformer-big | NIST Zh=\>En | 8 | 4096 | 3 | 30 epochs
 | + Word-level Oracle | NIST Zh=\>En | 8 | 4096 | 3 | 30 epochs
-| Transformer-base | WMT'14 En=\>De | 8 | 6144 | 2 | 80k updates
-| + Word-level Oracle | WMT'14 En=\>De | 8 | 12288 | 1 | 80k updates
-| + Sentence-level Oracle | WMT'14 En=\>De | 8 | 12288 | 1 | 40k updates
+| Transformer-base | WMT'14 En=\>De | 8 | 6144 | 2 | 80k updates (62 epochs)
+| + Word-level Oracle | WMT'14 En=\>De | 8 | 12288 | 1 | 80k updates (62 epochs)
+| + Sentence-level Oracle | WMT'14 En=\>De | 8 | 12288 | 1 | 40k updates (62th epoch -> 93th epoch)
 
 > **\#Toks.** means batchsize on single GPU.
 > 
@@ -118,6 +118,13 @@ python train.py $data_bin_dir \
     --source-lang zh --target-lang en --save-dir $model_dir | tee -a $model_dir/training.log
 ```
 
+The probability of sampling golden word decays with the number of epochs as follows: 
+
+<divalign="center">
+![avatar](/Users/kevinwzhang/research/mt/function/decay_epoch_zhen.png)
+</div>
+
+
 ### Results and Settings on WMT'14 English=\>German translation task
 We calculate the case-sensitive 4-gram tokenized BLEU by script [*multibleu.perl*](https://github.com/moses-smt/mosesdecoder/blob/RELEASE-4.0/scripts/generic/multi-bleu.perl)
 
@@ -155,6 +162,14 @@ python train.py $data_bin_dir \
     --source-lang en --target-lang de --save-dir $model_dir | tee -a $model_dir/training.log
 ```
 
+The probability of sampling golden word decays with the number of epochs as follows: 
+
+<divalign="center">
+![avatar](/Users/kevinwzhang/research/mt/function/decay_epoch_ende.png)
+</div>
+
+In order to save training time, we use the sentence-level oracle method to finetune the best base model.
+
 Setting of the sentence-level oracle for the WMT'14 English=\>German dataset:
 
 ```shell
@@ -174,6 +189,11 @@ python train.py $data_bin_dir \
     --source-lang en --target-lang de --save-dir $model_dir | tee -a $model_dir/training.log
 ```
 
+The probability of sampling golden word decays with the number of udpates as follows: 
+
+<divalign="center">
+![avatar](/Users/kevinwzhang/research/mt/function/decay_update.png)
+</div>
 
 ## NOTE
 + The speed of word-level training is almost the same as original transformer.
