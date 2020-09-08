@@ -28,6 +28,8 @@ By default, the probability is decayed based on the update index.
   - set `3000~8000` for the decaying based on update index
   - The larger the value, the slower the decay, vice versa.
 
+**NOTE:** *For a new data set, the hyperparameter`--decay-k` needs to be manually adjusted according to the maximum number of training updates or epochs (`--use-epoch-numbers-decay`) to ensure that the probability of sampling golden words does not decay so quickly.*
+
 Gumbel noise:
 - add `--use-greed-gumbel-noise` to sample word-level oracle with Gumbel noise
 - add `--use-bleu-gumbel-noise` to sample sentence-level oracle with Gumbel noise
