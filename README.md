@@ -29,7 +29,8 @@ By default, the probability is decayed based on the update index.
   - The larger the value, the slower the decay, vice versa.
 
 >> **NOTE:** **For a new data set, the hyperparameter `--decay-k` needs to be manually adjusted according to the maximum number of training updates (`default`) or epochs (`--use-epoch-numbers-decay`) to ensure that the probability of sampling golden words does not decay so quickly.**
->> For Eq.(11-13) in the paper, <img src="https://render.githubusercontent.com/render/math?math=\mathrm{argmax}\left(\tilde{P}_{j-1}\right)"> is actually the same as ``<img src="https://render.githubusercontent.com/render/math?math=\mathrm{argmax}\left(\tilde{P}_{j-1}\right)">``. The <img src="https://render.githubusercontent.com/render/math?math=\mathrm{argmax}"> operation is not needed in the code implementation.
+
+>> For Eq.(11~13) in the paper, <img src="https://render.githubusercontent.com/render/math?math=\mathrm{argmax}\left(\tilde{P}_{j-1}\right)"> is actually the same as <img src="https://render.githubusercontent.com/render/math?math=\mathrm{argmax}\left(\tilde{P}_{j-1}\right)">. The <img src="https://render.githubusercontent.com/render/math?math=\mathrm{argmax}"> operation is not needed in the code implementation.
 
 Gumbel noise:
 - add `--use-greed-gumbel-noise` to sample word-level oracle with Gumbel noise
@@ -63,15 +64,15 @@ python train.py $data_dir \
 
 
 
-### Model settings on NIST Chinese=\>English (Zh=\>En) and WMT'14 English=\>German (En=\>De).
+### Model settings on NIST Chinese-\>English (Zh-\>En) and WMT'14 English-\>German (En-\>De).
 
 | Models | Task | \#GPUs | \#Toks. | \#Freq. | Max
 | ----- | ----- | ----- | ----- | ----- | ----- 
-| Transformer-big | NIST Zh=\>En | 8 | 4096 | 3 | 30 epochs
-| + Word-level Oracle | NIST Zh=\>En | 8 | 4096 | 3 | 30 epochs
-| Transformer-base | WMT'14 En=\>De | 8 | 6144 | 2 | 80000 updates (62 epochs)
-| + Word-level Oracle | WMT'14 En=\>De | 8 | 12288 | 1 | 80000 updates (62 epochs)
-| + Sentence-level Oracle | WMT'14 En=\>De | 8 | 12288 | 1 | 40000 updates (62th epoch -> 93th epoch)
+| Transformer-big | NIST Zh-\>En | 8 | 4096 | 3 | 30 epochs
+| + Word-level Oracle | NIST Zh-\>En | 8 | 4096 | 3 | 30 epochs
+| Transformer-base | WMT'14 En-\>De | 8 | 6144 | 2 | 80000 updates (62 epochs)
+| + Word-level Oracle | WMT'14 En-\>De | 8 | 12288 | 1 | 80000 updates (62 epochs)
+| + Sentence-level Oracle | WMT'14 En-\>De | 8 | 12288 | 1 | 40000 updates (62th epoch -> 93th epoch)
 
 > **\#Toks.** means batchsize on single GPU.
 > 
@@ -79,7 +80,7 @@ python train.py $data_dir \
 > 
 > **Max** represents the maximum number of training epochs (30) or updates (80k).
 
-### Results and Settings on NIST Chinese=\>English translation task
+### Results and Settings on NIST Chinese-\>English translation task
 We calculate the case-insensitive 4-gram tokenized BLEU by script [*multibleu.perl*](https://github.com/moses-smt/mosesdecoder/blob/RELEASE-4.0/scripts/generic/multi-bleu.perl)
 
 | Models | dev. (MT02) | MT03 | MT04 | MT05 | MT06 | MT08 | Average
@@ -104,7 +105,7 @@ We also evaluate by the case-insensitive 4-gram detokenized BLEU with SacreBLEU,
 | Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==25) | 48.90	| 48.18 | 48.70 | 48.59 | 47.73 | 39.14 | 46.47 | 30
 | Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==30) | 48.53	| 48.59 | 48.74 | 48.58 | 48.07 | 39.71 | 46.74 | 30
 
-The setting of the NIST Chinese=\>English:
+The setting of the NIST Chinese-\>English:
 ```shell
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 data_bin_dir=directory_of_data_bin
@@ -129,14 +130,14 @@ As Eq.(15) in the paper, the probability of sampling golden word decays with the
 </div>
 
 
-### Results and Settings on WMT'14 English=\>German translation task
+### Results and Settings on WMT'14 English-\>German translation task
 We calculate the case-sensitive 4-gram tokenized BLEU by script [*multibleu.perl*](https://github.com/moses-smt/mosesdecoder/blob/RELEASE-4.0/scripts/generic/multi-bleu.perl)
 
 | Models | newstest2014 | \#update
 | ----- | ----- | -----
 | Transformer-base | 27.54 | 80000
-| Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==50, <img src="https://render.githubusercontent.com/render/math?math=\tao">==0.8) | 28.01 | 80000
-| Sentence-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==5800, <img src="https://render.githubusercontent.com/render/math?math=\tao">==0.5, beam\_size==4) | 28.45 | 40000
+| Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==50, <img src="https://render.githubusercontent.com/render/math?math=\tau">==0.8) | 28.01 | 80000
+| Sentence-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==5800, <img src="https://render.githubusercontent.com/render/math?math=\tau">==0.5, beam\_size==4) | 28.45 | 40000
 
 We also evaluate by the case-sensitive 4-gram detokenized BLEU with SacreBLEU, which is calculated the script [score.py](https://github.com/pytorch/fairseq/blob/master/fairseq_cli/score.py) provided by fairseq:
 **BLEU+case.mixed+lang.en-\{de,fr\}+numrefs.1+smooth.exp+tok.13a+version.1.4.4**
@@ -144,10 +145,10 @@ We also evaluate by the case-sensitive 4-gram detokenized BLEU with SacreBLEU, w
 | Models | newstest2014 | \#update
 | ----- | ----- | -----
 | Transformer-base | 26.45 | 80000
-| Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==50, <img src="https://render.githubusercontent.com/render/math?math=\tao">==0.8) | 26.86 | 80000
-| Sentence-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==5800, <img src="https://render.githubusercontent.com/render/math?math=\tao">==0.5, beam\_size==4) | 27.24 | 40000
+| Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==50, <img src="https://render.githubusercontent.com/render/math?math=\tau">==0.8) | 26.86 | 80000
+| Sentence-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==5800, <img src="https://render.githubusercontent.com/render/math?math=\tau">==0.5, beam\_size==4) | 27.24 | 40000
 
-Setting of the word-level oracle for the WMT'14 English=\>German dataset:
+Setting of the word-level oracle for the WMT'14 English-\>German dataset:
 
 ```shell
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
@@ -175,7 +176,7 @@ As Eq.(15) in the paper, the probability of sampling golden word decays with the
 
 In order to save training time, we use the sentence-level oracle method to finetune the best base model.
 
-Setting of the sentence-level oracle for the WMT'14 English=\>German dataset:
+Setting of the sentence-level oracle for the WMT'14 English-\>German dataset:
 
 ```shell
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
