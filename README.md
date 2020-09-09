@@ -59,14 +59,15 @@ python train.py $data_dir \
     --seed 1111 --skip-invalid-size-inputs-valid-test \
     --distributed-port 28888 --distributed-world-size 4 --ddp-backend=no_c10d \
     --source-lang en --target-lang de --save-dir $model_dir \
-	--use-word-level-oracles --use-epoch-numbers-decay --decay-k 10 --use-greed-gumbel-noise --gumbel-noise 0.5 | tee -a $model_dir/training.log
+	--use-word-level-oracles --use-epoch-numbers-decay --decay-k 10 \
+--use-greed-gumbel-noise --gumbel-noise 0.5 | tee -a $model_dir/training.log
 ```
 
 
 
 ### Model settings on NIST Chinese-\>English (Zh-\>En) and WMT'14 English-\>German (En-\>De).
 
-| Models | Task | \#GPUs | \#Toks. | \#Freq. | Max
+| Models | Translation Task | \#GPUs | \#Toks. | \#Freq. | Max
 | ----- | ----- | ----- | ----- | ----- | ----- 
 | Transformer-big | NIST Zh-\>En | 8 | 4096 | 3 | 30 epochs
 | +Word-level Oracle | NIST Zh-\>En | 8 | 4096 | 3 | 30 epochs
@@ -83,7 +84,7 @@ python train.py $data_dir \
 ### Results and Settings on NIST Chinese-\>English translation task
 We calculate the case-insensitive 4-gram tokenized BLEU by script [*multibleu.perl*](https://github.com/moses-smt/mosesdecoder/blob/RELEASE-4.0/scripts/generic/multi-bleu.perl)
 
-| Models | dev. (MT02) | MT03 | MT04 | MT05 | MT06 | MT08 | Average
+| Models | Dev. (MT02) | MT03 | MT04 | MT05 | MT06 | MT08 | Average
 | ----- | ----- | ----- | ----- | ----- | ----- | ----- | -----  
 | Transformer-big | 48.50 |	47.29 | 47.79 | 48.28 | 47.50 | 38.50 | 45.87 |	30
 | +Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==10) | 49.18 | 48.70 | 48.67 | 48.69 | 48.49 | 39.58 | 46.83 | 30
@@ -96,7 +97,7 @@ We calculate the case-insensitive 4-gram tokenized BLEU by script [*multibleu.pe
 We also evaluate by the case-insensitive 4-gram detokenized BLEU with SacreBLEU, which is calculated the script [score.py](https://github.com/pytorch/fairseq/blob/master/fairseq_cli/score.py) provided by fairseq:
 **BLEU+case.mixed+lang.en-\{de,fr\}+numrefs.4+smooth.exp+tok.13a+version.1.4.4**
 
-| Models | dev. (MT02) | MT03 | MT04 | MT05 | MT06 | MT08 | Average
+| Models | Dev. (MT02) | MT03 | MT04 | MT05 | MT06 | MT08 | Average
 | ----- | ----- | ----- | ----- | ----- | ----- | ----- | -----
 | Transformer-big | 48.46 | 47.41 | 47.88 | 48.25 | 47.52 | 38.60 | 45.93 | 30
 | +Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==10) | 49.20	| 48.80 | 48.77 | 48.64 | 48.49 | 39.79 | 46.90 | 30
@@ -123,7 +124,7 @@ python train.py $data_bin_dir \
     --source-lang zh --target-lang en --save-dir $model_dir | tee -a $model_dir/training.log
 ```
 
-As Eq.(15) in the paper, the probability of sampling golden word decays with the number of epochs as follows: 
+As Eq.(15) in the paper, the probability of sampling golden words decays with the number of epochs as follows: 
 
 <div align="center">
 <img src="./figs/decay_epoch_zhen.png" width="60%" height="60%">
@@ -167,7 +168,7 @@ python train.py $data_bin_dir \
     --source-lang en --target-lang de --save-dir $model_dir | tee -a $model_dir/training.log
 ```
 
-As Eq.(15) in the paper, the probability of sampling golden word decays with the number of epochs as follows: 
+As Eq.(15) in the paper, the probability of sampling golden words decays with the number of epochs as follows: 
 
 <div align="center">
 <img src="./figs/decay_epoch_ende.png" width="60%" height="60%">
@@ -195,7 +196,7 @@ python train.py $data_bin_dir \
     --source-lang en --target-lang de --save-dir $model_dir | tee -a $model_dir/training.log
 ```
 
-As Eq.(15) in the paper, the probability of sampling golden word decays with the number of udpates as follows: 
+As Eq.(15) in the paper, the probability of sampling golden words decays with the number of udpates as follows: 
 
 <div align="center">
 <img src="./figs/decay_update_ende.png" width="60%" height="60%">
@@ -206,7 +207,7 @@ As Eq.(15) in the paper, the probability of sampling golden word decays with the
 + The speed of word-level training is almost the same as original transformer.
 + Sentence-level training is slower than word-level training.
 + `--use-epoch-numbers-decay` and `--decay-k` need to be adapted on different training data.
-+ The `prob` field in the training log means the decay probability.
++ The `prob` field in the training log means the decay probability of sampling golden words.
 
 Test training speed and GPU memory usage on iwslt de2en training set
 
