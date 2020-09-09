@@ -69,11 +69,11 @@ python train.py $data_dir \
 
 | Models | Translation Task | \#GPUs | \#Toks. | \#Freq. | Max
 | --- | --- | --- | --- | --- | ---
-| Transformer-big | <div style="width: 250pt">NIST Zh-\>En | 8 | 4096 | 3 | 30 epochs
-| +Word-level Oracle| <div style="width: 250pt">NIST Zh-\>En | 8 | 4096 | 3 | 30 epochs
-| Transformer-base | <div style="width: 250pt">WMT'14 En-\>De | 8 | 6144 | 2 | 80000 updates (62 epochs)
-| +Word-level Oracle | <div style="width: 250pt">WMT'14 En-\>De | 8 | 12288 | 1 | 80000 updates (62 epochs)
-| +Sentence-level Oracle | <div style="width: 250pt">WMT'14 En-\>De | 8 | 12288 | 1 | 40000 updates (62th epoch -> 93th epoch)
+| Transformer-big | <div style="width: 150pt">NIST Zh-\>En</div> | 8 | 4096 | 3 | 30 epochs
+| +Word-level Oracle| <div style="width: 150pt">NIST Zh-\>En</div> | 8 | 4096 | 3 | 30 epochs
+| Transformer-base | <div style="width: 150pt">WMT'14 En-\>De</div> | 8 | 6144 | 2 | 80000 updates (62 epochs)
+| +Word-level Oracle | <div style="width: 150pt">WMT'14 En-\>De</div> | 8 | 12288 | 1 | 80000 updates (62 epochs)
+| +Sentence-level Oracle | <div style="width: 150pt">WMT'14 En-\>De</div> | 8 | 12288 | 1 | 40000 updates (62th epoch -> 93th epoch)
 
 > **\#Toks.** means batchsize on single GPU.
 > 
