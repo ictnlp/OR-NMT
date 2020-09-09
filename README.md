@@ -59,8 +59,8 @@ python train.py $data_dir \
     --seed 1111 --skip-invalid-size-inputs-valid-test \
     --distributed-port 28888 --distributed-world-size 4 --ddp-backend=no_c10d \
     --source-lang en --target-lang de --save-dir $model_dir \
-	--use-word-level-oracles --use-epoch-numbers-decay --decay-k 10 \
---use-greed-gumbel-noise --gumbel-noise 0.5 | tee -a $model_dir/training.log
+    --use-word-level-oracles --use-epoch-numbers-decay --decay-k 10 \
+    --use-greed-gumbel-noise --gumbel-noise 0.5 | tee -a $model_dir/training.log
 ```
 
 
@@ -68,7 +68,7 @@ python train.py $data_dir \
 ### Model settings on NIST Chinese-\>English (Zh-\>En) and WMT'14 English-\>German (En-\>De).
 
 | Models | Translation Task | \#GPUs | \#Toks. | \#Freq. | Max
-| ----- | ----- | ----- | ----- | ----- | ----- 
+| ----- |:----- | ----- | ----- | ----- | ----- 
 | Transformer-big | NIST Zh-\>En | 8 | 4096 | 3 | 30 epochs
 | +Word-level Oracle | NIST Zh-\>En | 8 | 4096 | 3 | 30 epochs
 | Transformer-base | WMT'14 En-\>De | 8 | 6144 | 2 | 80000 updates (62 epochs)
