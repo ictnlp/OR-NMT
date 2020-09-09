@@ -30,7 +30,7 @@ By default, the probability is decayed based on the update index.
 
 >> **NOTE:** **For a new data set, the hyperparameter `--decay-k` needs to be manually adjusted according to the maximum number of training updates (`default`) or epochs (`--use-epoch-numbers-decay`) to ensure that the probability of sampling golden words does not decay so quickly.**
 
->> For Eq.(11~13) in the paper, <img src="https://render.githubusercontent.com/render/math?math=\mathrm{argmax}\left(\tilde{P}_{j-1}\right)"> is actually the same as <img src="https://render.githubusercontent.com/render/math?math=\mathrm{argmax}\left(\tilde{P}_{j-1}\right)">. The <img src="https://render.githubusercontent.com/render/math?math=\mathrm{argmax}"> operation is not needed in the code implementation.
+>> For Eq.(11~13) in the paper, <img src="https://render.githubusercontent.com/render/math?math=\mathrm{argmax}\left(\tilde{P}_{j-1}\right)"> is actually the same as <img src="https://render.githubusercontent.com/render/math?math=\mathrm{argmax}\left(\tilde{o}_{j-1}\right)">. The <img src="https://render.githubusercontent.com/render/math?math=\mathrm{argmax}"> operation is not needed in the code implementation.
 
 Gumbel noise:
 - add `--use-greed-gumbel-noise` to sample word-level oracle with Gumbel noise
@@ -69,10 +69,10 @@ python train.py $data_dir \
 | Models | Task | \#GPUs | \#Toks. | \#Freq. | Max
 | ----- | ----- | ----- | ----- | ----- | ----- 
 | Transformer-big | NIST Zh-\>En | 8 | 4096 | 3 | 30 epochs
-| + Word-level Oracle | NIST Zh-\>En | 8 | 4096 | 3 | 30 epochs
+| +Word-level Oracle | NIST Zh-\>En | 8 | 4096 | 3 | 30 epochs
 | Transformer-base | WMT'14 En-\>De | 8 | 6144 | 2 | 80000 updates (62 epochs)
-| + Word-level Oracle | WMT'14 En-\>De | 8 | 12288 | 1 | 80000 updates (62 epochs)
-| + Sentence-level Oracle | WMT'14 En-\>De | 8 | 12288 | 1 | 40000 updates (62th epoch -> 93th epoch)
+| +Word-level Oracle | WMT'14 En-\>De | 8 | 12288 | 1 | 80000 updates (62 epochs)
+| +Sentence-level Oracle | WMT'14 En-\>De | 8 | 12288 | 1 | 40000 updates (62th epoch -> 93th epoch)
 
 > **\#Toks.** means batchsize on single GPU.
 > 
@@ -86,11 +86,11 @@ We calculate the case-insensitive 4-gram tokenized BLEU by script [*multibleu.pe
 | Models | dev. (MT02) | MT03 | MT04 | MT05 | MT06 | MT08 | Average
 | ----- | ----- | ----- | ----- | ----- | ----- | ----- | -----  
 | Transformer-big | 48.50 |	47.29 | 47.79 | 48.28 | 47.50 | 38.50 | 45.87 |	30
-| Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==10) | 49.18 | 48.70 | 48.67 | 48.69 | 48.49 | 39.58 | 46.83 | 30
-| Word-level Oracle (**<img src="https://render.githubusercontent.com/render/math?math=\mu">==15**) | **49.05** | **48.57** | **48.73** | **48.68** | **48.59** | **39.68** | **46.85** | 30
-| Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==20) | 49.30 | 48.46 | 48.57 | 48.87 | 48.57 | 39.46 | 46.79 | 30
-| Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==25) | 48.88 | 48.32 | 48.66 | 48.74 | 48.32 | 39.38 | 46.68 | 30
-| Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==30) | 48.47 | 48.37 | 48.50 | 48.63 | 48.07 | 39.54 | 46.62 | 46.74 | 30
+| +Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==10) | 49.18 | 48.70 | 48.67 | 48.69 | 48.49 | 39.58 | 46.83 | 30
+| +Word-level Oracle (**<img src="https://render.githubusercontent.com/render/math?math=\mu">==15**) | **49.05** | **48.57** | **48.73** | **48.68** | **48.59** | **39.68** | **46.85** | 30
+| +Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==20) | 49.30 | 48.46 | 48.57 | 48.87 | 48.57 | 39.46 | 46.79 | 30
+| +Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==25) | 48.88 | 48.32 | 48.66 | 48.74 | 48.32 | 39.38 | 46.68 | 30
+| +Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==30) | 48.47 | 48.37 | 48.50 | 48.63 | 48.07 | 39.54 | 46.62 | 46.74 | 30
 
 
 We also evaluate by the case-insensitive 4-gram detokenized BLEU with SacreBLEU, which is calculated the script [score.py](https://github.com/pytorch/fairseq/blob/master/fairseq_cli/score.py) provided by fairseq:
@@ -99,11 +99,11 @@ We also evaluate by the case-insensitive 4-gram detokenized BLEU with SacreBLEU,
 | Models | dev. (MT02) | MT03 | MT04 | MT05 | MT06 | MT08 | Average
 | ----- | ----- | ----- | ----- | ----- | ----- | ----- | -----
 | Transformer-big | 48.46 | 47.41 | 47.88 | 48.25 | 47.52 | 38.60 | 45.93 | 30
-| Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==10) | 49.20	| 48.80 | 48.77 | 48.64 | 48.49 | 39.79 | 46.90 | 30
-| Word-level Oracle (**<img src="https://render.githubusercontent.com/render/math?math=\mu">==15**) | **49.07** | **48.64** | **48.81** | **48.63** | **48.65** | **39.88** | **46.92** | 30
-| Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==20) | 49.32	| 48.54 | 48.73 | 48.82 | 48.51 | 39.50 | 46.82 | 30
-| Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==25) | 48.90	| 48.18 | 48.70 | 48.59 | 47.73 | 39.14 | 46.47 | 30
-| Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==30) | 48.53	| 48.59 | 48.74 | 48.58 | 48.07 | 39.71 | 46.74 | 30
+| +Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==10) | 49.20	| 48.80 | 48.77 | 48.64 | 48.49 | 39.79 | 46.90 | 30
+| +Word-level Oracle (**<img src="https://render.githubusercontent.com/render/math?math=\mu">==15**) | **49.07** | **48.64** | **48.81** | **48.63** | **48.65** | **39.88** | **46.92** | 30
+| +Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==20) | 49.32	| 48.54 | 48.73 | 48.82 | 48.51 | 39.50 | 46.82 | 30
+| +Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==25) | 48.90	| 48.18 | 48.70 | 48.59 | 47.73 | 39.14 | 46.47 | 30
+| +Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==30) | 48.53	| 48.59 | 48.74 | 48.58 | 48.07 | 39.71 | 46.74 | 30
 
 The setting of the NIST Chinese-\>English:
 ```shell
@@ -136,8 +136,8 @@ We calculate the case-sensitive 4-gram tokenized BLEU by script [*multibleu.perl
 | Models | newstest2014 | \#update
 | ----- | ----- | -----
 | Transformer-base | 27.54 | 80000
-| Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==50, <img src="https://render.githubusercontent.com/render/math?math=\tau">==0.8) | 28.01 | 80000
-| Sentence-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==5800, <img src="https://render.githubusercontent.com/render/math?math=\tau">==0.5, beam\_size==4) | 28.45 | 40000
+| +Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==50, <img src="https://render.githubusercontent.com/render/math?math=\tau">==0.8) | 28.01 | 80000
+| +Sentence-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==5800, <img src="https://render.githubusercontent.com/render/math?math=\tau">==0.5, beam\_size==4) | 28.45 | 40000
 
 We also evaluate by the case-sensitive 4-gram detokenized BLEU with SacreBLEU, which is calculated the script [score.py](https://github.com/pytorch/fairseq/blob/master/fairseq_cli/score.py) provided by fairseq:
 **BLEU+case.mixed+lang.en-\{de,fr\}+numrefs.1+smooth.exp+tok.13a+version.1.4.4**
@@ -145,8 +145,8 @@ We also evaluate by the case-sensitive 4-gram detokenized BLEU with SacreBLEU, w
 | Models | newstest2014 | \#update
 | ----- | ----- | -----
 | Transformer-base | 26.45 | 80000
-| Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==50, <img src="https://render.githubusercontent.com/render/math?math=\tau">==0.8) | 26.86 | 80000
-| Sentence-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==5800, <img src="https://render.githubusercontent.com/render/math?math=\tau">==0.5, beam\_size==4) | 27.24 | 40000
+| +Word-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==50, <img src="https://render.githubusercontent.com/render/math?math=\tau">==0.8) | 26.86 | 80000
+| +Sentence-level Oracle (<img src="https://render.githubusercontent.com/render/math?math=\mu">==5800, <img src="https://render.githubusercontent.com/render/math?math=\tau">==0.5, beam\_size==4) | 27.24 | 40000
 
 Setting of the word-level oracle for the WMT'14 English-\>German dataset:
 
