@@ -313,9 +313,8 @@ class TransformerModel(FairseqEncoderDecoderModel):
                     tmp_max = bleu
             sentence_oracle_inputs[i, :len(best_item['tokens']) - 1] = best_item['tokens'][:-1]
             i += 1
-        oracle_inputs = torch.cat([(bos_idx * torch.ones((B, 1))).to(prev_output_tokens), sentence_oracle_inputs],
-                                  dim=1)[
-                        :, :-1]
+        oracle_inputs = torch.cat([bos_idx * torch.ones((B, 1), device=prev_output_tokens.device, dtype=torch.int64),
+                                   sentence_oracle_inputs], dim=1)[:, :-1]
         self.train()
         return oracle_inputs
 

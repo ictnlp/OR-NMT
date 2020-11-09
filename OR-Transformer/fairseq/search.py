@@ -75,7 +75,7 @@ class BeamSearch(Search):
         )
         scores_buf = top_prediction[0]
         indices_buf = top_prediction[1]
-        beams_buf = torch.div(indices_buf, vocab_size)
+        beams_buf = indices_buf // vocab_size
         indices_buf.fmod_(vocab_size)
         return scores_buf, indices_buf, beams_buf
 
